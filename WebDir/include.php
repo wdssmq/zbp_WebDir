@@ -93,6 +93,9 @@ function WebDir_Path($file, $t = "path")
         case "base":
             return $result . "usr/";
             break;
+        case "baseV":
+            return str_replace(trim($zbp->path,"/"),"",WebDir_Path("base"));
+            break;
         case "html":
             return $result . "var/WebDir.html";
             break;
@@ -105,6 +108,12 @@ function WebDir_Path($file, $t = "path")
 }
 function InstallPlugin_WebDir()
 {
+    global $zbp;
+    $zbp->BuildTemplate();
+    $dir = WebDir_Path("base");
+    if (!is_dir($dir)) {
+        @mkdir($dir);
+    }
 }
 function UninstallPlugin_WebDir()
 {

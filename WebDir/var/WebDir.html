@@ -18,6 +18,23 @@
             background-color: #FFFFFF;
             padding-bottom: 13px;
         }
+
+        .table {
+            table-layout: fixed;
+        }
+
+        th:not(:first-child),
+        td:not(:first-child) {
+            width: 193px;
+        }
+
+        td>* {
+            display: inline-block;
+            width: 102%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 
@@ -44,12 +61,12 @@
                 </h2>
             </div>
         </div>
-        <table class="table table-striped ">
+        <table class="table table-striped table-bordered table-hover">
             <tr>
                 <th>文件名</th>
                 <th>大小</th>
                 <th>时间</th>
-                <th>下载</th>
+                <th class="text-center">下载</th>
             </tr>
             {foreach $dirs as $dir}
             <tr>
@@ -64,7 +81,7 @@
                 <td><a href="{$file.url}" title="{$file.name}" onclick="return false;"><span class="{$file.icon}">{$file.name}</span></a></td>
                 <td>{$file.size}</td>
                 <td>{$file.mtime}</td>
-                <td><a href="{$file.download}" download="{$file.name}"><span class="glyphicon glyphicon-download-alt"></span></a></td>
+                <td class="text-center"><a href="{$file.download}" download="{$file.name}"><span class="glyphicon glyphicon-download-alt"></span></a></td>
             </tr>
             {/foreach}
         </table>
