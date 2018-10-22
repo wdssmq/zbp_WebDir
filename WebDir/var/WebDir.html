@@ -13,7 +13,8 @@
         }
 
         .container {
-            margin-top: 100px;
+            margin-top: 59px;
+            margin-bottom:59px;
             border-radius: 15px;
             background-color: #FFFFFF;
             padding-bottom: 13px;
@@ -49,15 +50,18 @@
                     </a>
                 </h2>
             </div>
-            <div class="col-md-10">
+            <div class="col-md-9">
                 <h3>
                 </h3>
             </div>
-            <div class="col-md-1 text-center">
-                <h2>
+            <div class="col-md-2">
+                <h2 class="text-right">
                     <a class="btn btn-primary" href="{$host}" title="主页">
                         <span class="glyphicon glyphicon-home"></span>
                     </a>
+                    <a class="btn btn-primary" href="{$host}zb_users/plugin/WebDir/main.php" title="管理">
+                        <span class="glyphicon glyphicon glyphicon-tasks"></span>
+                    </a>&nbsp;
                 </h2>
             </div>
         </div>
@@ -85,7 +89,6 @@
             </tr>
             {/foreach}
         </table>
-        <hr>
         <p class="text-center">{$copyright}</p>
         <p class="text-center">Powered By <a href="//www.zblogcn.com/" rel="nofollow" title="Z-BlogPHP" target="_blank">Z-BlogPHP</a>
             & <a href="http://www.wdssmq.com" target="_blank" title="WebDir For ZBP" rel="nofollow">WebDir For ZBP</a></p>

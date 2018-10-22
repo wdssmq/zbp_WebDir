@@ -49,6 +49,9 @@ function WebDir_Upload()
                         return false;
                     }
                     $file = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? iconv("UTF-8", "GBK", $_FILES[$key]['name']) : $_FILES[$key]['name'];
+                    $temp_arr = explode(".", $file);
+                    $file_ext = strtolower(trim(array_pop($temp_arr)));
+                    $file = trim(array_shift($temp_arr)) . "-" . (date("YmdH") + rand(date("i"), 99)) . '.' . $file_ext;
                     move_uploaded_file($_FILES[$key]['tmp_name'], WebDir_Path("base") . $file);
                 }
             }
@@ -94,7 +97,7 @@ function WebDir_Path($file, $t = "path")
             return $result . "usr/";
             break;
         case "baseV":
-            return str_replace(trim($zbp->path,"/"),"",WebDir_Path("base"));
+            return str_replace(trim($zbp->path, "/"), "", WebDir_Path("base"));
             break;
         case "html":
             return $result . "var/WebDir.html";
@@ -117,4 +120,6 @@ function InstallPlugin_WebDir()
 }
 function UninstallPlugin_WebDir()
 {
+    global $zbp;
+    $zbp->BuildTemplate();
 }
