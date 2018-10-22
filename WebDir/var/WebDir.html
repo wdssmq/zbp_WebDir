@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WebDir - {$name}</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            background-color: #F1F1FA;
+        }
+
+        .container {
+            margin-top: 100px;
+            border-radius: 15px;
+            background-color: #FFFFFF;
+            padding-bottom: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-1 text-center">
+                <h2>
+                    <a class="btn btn-primary" href="{if isset($_SERVER['HTTP_REFERER'])}{$_SERVER['HTTP_REFERER']}{/if}"
+                        title="返回">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                </h2>
+            </div>
+            <div class="col-md-10">
+                <h3>
+                </h3>
+            </div>
+            <div class="col-md-1 text-center">
+                <h2>
+                    <a class="btn btn-primary" href="{$host}" title="主页">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </h2>
+            </div>
+        </div>
+        <table class="table table-striped ">
+            <tr>
+                <th>文件名</th>
+                <th>大小</th>
+                <th>时间</th>
+                <th>下载</th>
+            </tr>
+            {foreach $dirs as $dir}
+            <tr>
+                <td><a href="{$dir.url}"><span class="{$dir.icon}">{$dir.name}</span></a></td>
+                <td>{$dir.size}</td>
+                <td>{$dir.mtime}</td>
+                <td></td>
+            </tr>
+            {/foreach}
+            {foreach $files as $file}
+            <tr>
+                <td><a href="{$file.url}" title="{$file.name}" onclick="return false;"><span class="{$file.icon}">{$file.name}</span></a></td>
+                <td>{$file.size}</td>
+                <td>{$file.mtime}</td>
+                <td><a href="{$file.download}" download="{$file.name}"><span class="glyphicon glyphicon-download-alt"></span></a></td>
+            </tr>
+            {/foreach}
+        </table>
+        <hr>
+        <p class="text-center">{$copyright}</p>
+        <p class="text-center">Powered By <a href="//www.zblogcn.com/" rel="nofollow" title="Z-BlogPHP" target="_blank">Z-BlogPHP</a>
+            & <a href="http://www.wdssmq.com" target="_blank" title="WebDir For ZBP" rel="nofollow">WebDir For ZBP</a></p>
+    </div>
+    <script src="{$host}zb_system/script/jquery-2.2.4.min.js" type="text/javascript"></script>
+    <script src="{$host}zb_system/script/zblogphp.js" type="text/javascript"></script>
+    <script src="{$host}zb_system/script/c_html_js_add.php" type="text/javascript"></script>
+    {$footer}
+</body>
+
+</html>
