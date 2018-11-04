@@ -26,7 +26,8 @@ require $blogpath . 'zb_system/admin/admin_top.php';
     <form class="search" name="upload" id="upload" method="post" enctype="multipart/form-data" action="<?php echo BuildSafeCmdURL('act=WebDirPst'); ?>"><p><input type="file" name="file" size="60">&nbsp;&nbsp;<input type="submit" class="button" value="提交" onclick="">&nbsp;&nbsp;<input class="button" type="reset" value="重置"></p></form>
     <h3>前台地址：<a title="当前地址" target="_blank" href="<?php echo $url; ?>"><?php echo $url ?></a></h3>
     <h3>文件路径：<?php echo WebDir_Path("baseV") ?></h3>
-    <h3>方案及部分代码来源：<a href="https://github.com/maysrp/webdir" titile="maysrp-webdir" target="_blank">https://github.com/maysrp/webdir</a></h3>
+    --------
+    <h3><a href="<?php echo $zbp->host?>/zb_users/plugin/AppCentre/main.php?id=1859" title="反馈" target="_blank">反馈建议</a>&nbsp;&nbsp;<a href="https://github.com/maysrp/webdir" title="maysrp-webdir" target="_blank">方案及重要代码来源</a></h3>
     <div class="xnxf">
       <h5>－－－－下边是推广链接－－－－</h5>
       <p>－－<b><a title="注册 - 一览阅读" target="_blank" href="https://www.yilan.io/signup?inviteCode=59ca38d5ebdbdd981524823e">注册 - 一览阅读</a>（送7天VIP）</b></p>

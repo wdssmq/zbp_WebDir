@@ -1,11 +1,11 @@
 <?php
 /**
- * 
+ *
  * 主体代码修改自：maysrp/webdir: 网站目录
  * 主体代码修改自：https://github.com/maysrp/webdir
  * 当前文件作者：沉冰浮水
  * 当前作者主页：https://www.wdssmq.com
- * 
+ *
  **/
 class WebDir
 {
@@ -88,6 +88,7 @@ class WebDir
     function download($file)
     {
         $url = str_replace($this->baseDir, $this->baseUrl, $file);
+        $url = str_replace("#", "%23", $url);
         return iconv("GBK", "UTF-8", $url);
     }
     function filename($file, $utf = 0)
