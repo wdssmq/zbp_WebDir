@@ -11,7 +11,7 @@ if (!$zbp->CheckPlugin('WebDir')) {
   $zbp->ShowError(48);
   die();
 }
-$blogtitle = 'WebDir';
+$blogtitle = '前台附件下载列表';
 $url = $zbp->host . "WebDir/";
 require $blogpath . 'zb_system/admin/admin_header.php';
 require $blogpath . 'zb_system/admin/admin_top.php';

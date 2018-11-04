@@ -93,7 +93,7 @@ function WebDir_Main()
   // echo $x->out("dir");
   if ($zbp->user->ID > 0) {
     $copy = $zbp->template->templateTags['copyright'];
-    $copy .= ' | <a href="{$host}zb_users/plugin/WebDir/main.php" title="管理">后台管理</a>';
+    $copy .= ' | <a href="' . WebDir_Path("main", "host") . '" title="管理">后台管理</a>';
     $zbp->template->SetTags('copyright', $copy);
   }
   $zbp->template->SetTags('dirs', $x->out("dir"));
