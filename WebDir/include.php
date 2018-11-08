@@ -35,6 +35,12 @@ function WebDir_CheckExtName($name)
 
   return HasNameInString($extList, $e);
 }
+function WebDir_Trim($value)
+{
+  $value = trim($value);
+  $value = trim($value, "_#");
+  return $value;
+};
 function WebDir_Upload()
 {
   global $zbp;
@@ -52,8 +58,9 @@ function WebDir_Upload()
           }
           $file = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? iconv("UTF-8", "GBK", $_FILES[$key]['name']) : $_FILES[$key]['name'];
           $temp_arr = explode(".", $file);
-          $file_ext = strtolower(trim(array_pop($temp_arr)));
-          $file = trim(array_shift($temp_arr)) . "-" . date("YmdHi") . '.' . $file_ext;
+          $temp_arr = array_map("WebDir_Trim", $temp_arr);
+          $file_ext = strtolower(array_pop($temp_arr));
+          $file = array_shift($temp_arr) . "#-#" . date("YmdHi") . '.' . $file_ext;
           $rlt['name'] = $_FILES[$key]['name'];
           move_uploaded_file($_FILES[$key]['tmp_name'], WebDir_Path("base") . $file);
         }
