@@ -11,13 +11,11 @@ if (!$zbp->CheckPlugin('WebDir')) {
   $zbp->ShowError(48);
   die();
 }
+InstallPlugin_WebDir();
 $blogtitle = '前台附件下载列表';
 $url = $zbp->host . "WebDir/";
 require $blogpath . 'zb_system/admin/admin_header.php';
 require $blogpath . 'zb_system/admin/admin_top.php';
-// echo date("Y-m-d-H-i-s");
-// echo rand(90,3);
-// echo rand(3,9);
 ?>
 <div id="divMain">
   <div class="divHeader"><?php echo $blogtitle; ?> <a href="main.php" title="刷新"><small>刷新</small></a></div>

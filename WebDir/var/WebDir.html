@@ -46,6 +46,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
+      .act-del,
+      .act-del * {
+        text-decoration: line-through;
+      }
     </style>
   </head>
   <!--
@@ -58,7 +62,6 @@
      *
      **/
   -->
-
   <body>
     <div class="container">
       <div class="row nav">
@@ -109,7 +112,7 @@
           <td></td>
         </tr>
         {/foreach} {foreach $files as $file}
-        <tr>
+        <tr class="act-{$file.act}">
           <td>
             <a href="{$file.url}" title="{$file.name}" onclick="return false;"
               ><span class="{$file.icon}">{$file.name}</span></a
