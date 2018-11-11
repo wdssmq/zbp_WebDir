@@ -13,7 +13,7 @@ function ActivePlugin_WebDir()
 function WebDir_CheckRights($action, $level)
 {
   global $zbp;
-  if ($action === "WebDirPst") {
+  if ($action === "WebDirPst" || $action === "WebDirDel") {
     if (!$zbp->CheckRights('root')) {
       $zbp->ShowError(6);
       die();
@@ -60,7 +60,7 @@ function WebDir_Upload()
           $temp_arr = explode(".", $file);
           $temp_arr = array_map("WebDir_Trim", $temp_arr);
           $file_ext = strtolower(array_pop($temp_arr));
-          $file = array_shift($temp_arr) . "#-#" . date("YmdHi") . '.' . $file_ext;
+          $file = join(".", $temp_arr) . "#-#" . date("YmdHi") . '.' . $file_ext;
           $rlt['name'] = $_FILES[$key]['name'];
           move_uploaded_file($_FILES[$key]['tmp_name'], WebDir_Path("base") . $file);
         }
@@ -72,6 +72,11 @@ function WebDir_Upload()
     } else {
       JsonReturn((object)$rlt);
     }
+  } else if ($action === "WebDirDel") {
+    CheckIsRefererValid();
+    $file = GetVars("file", "GET");
+    @unlink(WebDir_Path("base") . $file);
+    Redirect($zbp->host . "WebDir/");
   }
 }
 function WebDir_Rewrite($inpurl, $url)

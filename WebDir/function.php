@@ -45,8 +45,8 @@ class WebDir
     if (is_dir($this->dir)) {
       $this->file = GetFilesInDir($this->dir, $this->fileType);
       $this->dirdir = GetDirsInDir($this->dir);
-      sort($this->file);
-      sort($this->dirdir);
+      rsort($this->file);
+      rsort($this->dirdir);
     } else {
       echo "error";
     }
@@ -61,7 +61,7 @@ class WebDir
         }
         $dir = (object)array();
         $dir->url = $this->dirurl($value);
-        $dir->name = $this->filename($value, 1);
+        $dir->name = $this->filename($value);
         $dir->icon = "glyphicon glyphicon-list";
         $dir->size = "目录";
         $dir->mtime = $this->mtime($this->dir . $value);
@@ -71,7 +71,7 @@ class WebDir
       foreach ($this->file as $key => $value) {
         $file = (object)array();
         $file->url = $this->dirurl($value);
-        $file->name = $this->filename($value, 1);
+        $file->name = $this->filename($value);
         $file->icon = $this->icon($value);
         $file->size = $this->size($value);
         $file->mtime = $this->mtime($value);
@@ -85,17 +85,19 @@ class WebDir
   function dirurl($dir)
   {
     $urf = str_replace($this->baseDir, '', $dir);
-    return "?dir=" . rawurlencode($urf);
+    return rawurlencode($urf);
   }
   function download($file)
   {
+    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+      $file = iconv("GBK", "UTF-8", $file);
     $url = str_replace($this->baseDir, $this->baseUrl, $file);
     // $url = str_replace("#", "%23", $url);
-    return iconv("GBK", "UTF-8", $url);
+    return $url;
   }
-  function filename($file, $utf = 0)
+  function filename($file)
   {
-    if ($utf === 1)
+    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
       $file = iconv("GBK", "UTF-8", $file);
     $file = str_replace("#", "", $file);
     $ar = explode("/", $file);
