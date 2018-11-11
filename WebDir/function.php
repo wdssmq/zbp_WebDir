@@ -75,7 +75,7 @@ class WebDir
         $file->icon = $this->icon($value);
         $file->size = $this->size($value);
         $file->mtime = $this->mtime($value);
-        $file->act = floor((time() - filemtime($value)) / 86400) > 13 ? "del" : "none";
+        $file->act = floor((time() - filemtime($value)) / 86400) > 13 ? "del warning" : "none";
         $file->download = $this->download($value);
         $array[] = $file;
       }

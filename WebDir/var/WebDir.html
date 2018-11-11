@@ -89,7 +89,7 @@
             target="_blank"
             enctype="multipart/form-data"
           >
-            <input type="file" name="file" id="file" />
+            <input type="file" name="file" id="file" multiple />
           </form>
           {/if}
         </div>
@@ -121,7 +121,10 @@
         {/foreach} {foreach $files as $file}
         <tr class="act-{$file.act}">
           <td>
-            <a href="?file={$file.url}" title="{$file.name}" onclick="return false;"
+            <a
+              href="?file={$file.url}"
+              title="{$file.name}"
+              onclick="return false;"
               ><span class="{$file.icon}"></span
               ><span class="js-length">{$file.name}</span></a
             >
@@ -200,7 +203,11 @@
             $(".file-preview").addClass("hidden");
           })
           .on("drop", function(ev) {
-            if ($(ev.target).hasClass("file-drop-zone-title")) {
+            console.log($(ev.target));
+            if (
+              $(ev.target).hasClass("file-drop-zone-title") ||
+              $(".file-drop-zone").find(ev.target).length > 0
+            ) {
               $("#file").fileinput("upload");
             } else {
               $(".file-preview").addClass("hidden");
@@ -211,6 +218,14 @@
             language: "zh", //设置语言
             uploadUrl: $(".js-form").attr("action"), //上传的地址
             // allowedFileExtensions: ['jpg', 'png', 'torrent'],//接收的文件后缀
+            allowedPreviewTypes: [
+              "image",
+              "html",
+              "text",
+              "video",
+              "audio",
+              "flash"
+            ],
             browseOnZoneClick: true,
             browseClass: "btn btn-primary",
             browseLabel: "选择文件",
@@ -245,13 +260,11 @@
         });
         $(".act-del,.act-del a").each(function() {
           $(this).addClass("text-warning");
-          // $(this).addClass("bg-warning");
         });
         $("td .js-length").each(function() {
           let str = $(this)
             .html()
             .trim();
-          // alert(str);
           let m = 31,
             n = 23;
           if (str.length <= m + n) return;
