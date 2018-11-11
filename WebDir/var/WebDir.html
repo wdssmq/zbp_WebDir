@@ -50,6 +50,9 @@
       .act-del * {
         text-decoration: line-through;
       }
+      .file-drop-zone.clickable:hover {
+        border: 1px dashed #999;
+      }
     </style>
   </head>
   <!--
@@ -174,12 +177,26 @@
     ></script>
     <script type="text/javascript">
       $(function() {
+        $("body > .container")
+          .on("dragenter", function(ev) {
+            $(".file-preview").removeClass("hidden");
+          })
+          .on("click", ".close.fileinput-remove", function() {
+            $(".file-preview").addClass("hidden");
+          })
+          .on("drop", function(ev) {
+            if ($(ev.target).hasClass("file-drop-zone-title")) {
+              $("#file").fileinput("upload");
+            } else {
+              $(".file-preview").addClass("hidden");
+            }
+          });
         $("#file")
           .fileinput({
             language: "zh", //设置语言
             uploadUrl: $(".js-form").attr("action"), //上传的地址
             // allowedFileExtensions: ['jpg', 'png', 'torrent'],//接收的文件后缀
-            showPreview: false,
+            browseOnZoneClick: true,
             browseClass: "btn btn-primary",
             browseLabel: "选择文件",
             browseIcon: '<i class="glyphicon glyphicon-plus"></i>',
@@ -188,7 +205,7 @@
             uploadClass: "btn btn-info",
             uploadLabel: "上传",
             uploadIcon: '<i class="glyphicon glyphicon-refresh"></i>',
-            initialCaption: "选择文件"
+            initialCaption: "选择文件或拖拽文件到本页"
           })
           .on("fileuploaded", function(event, data, previewId, index) {
             console.log(JSON.stringify(data.response));
@@ -198,10 +215,18 @@
               location.reload();
             }
           });
+        $(".file-caption").click(function() {
+          $("#file").trigger("click");
+        });
+        $(".file-preview").addClass("hidden");
         $(".js-form").removeClass("hidden");
         $(".js-download").mouseenter(function() {
           this.href = this.href.replace(/#/g, "%23");
           console.log(this.href);
+        });
+        $(".act-del,.act-del a").each(function() {
+          $(this).addClass("text-warning");
+          // $(this).addClass("bg-warning");
         });
       });
     </script>
