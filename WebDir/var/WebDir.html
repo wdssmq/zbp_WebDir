@@ -17,7 +17,6 @@
       body {
         background-color: #f1f1fa;
       }
-
       .container {
         margin-top: 59px;
         margin-bottom: 59px;
@@ -25,20 +24,16 @@
         background-color: #ffffff;
         padding-bottom: 13px;
       }
-
       .row.nav {
         padding: 20px 0 13px;
       }
-
       .table {
         table-layout: fixed;
       }
-
       th:first-child,
       td:first-child {
         width: 41%;
       }
-
       td:first-child > * {
         display: inline-block;
         width: 102%;
@@ -48,6 +43,11 @@
       }
       .td10 {
         width: 10%;
+      }
+      .tips,.tips * {
+        text-align: center;
+        margin: 0;
+        padding: 0;
       }
       .act-del,
       .act-del * {
@@ -150,7 +150,11 @@
             {/if}
           </td>
         </tr>
-        {/foreach}
+        {/foreach} {if isset($tips)}
+        <tr class="tips">
+          <td colspan="4">{$tips}</td>
+        </tr>
+        {/if}
       </table>
 
       <p class="text-center">{$copyright}</p>
@@ -221,10 +225,7 @@
             allowedPreviewTypes: [
               "image",
               "html",
-              "text",
-              "video",
-              "audio",
-              "flash"
+              "text"
             ],
             browseOnZoneClick: true,
             browseClass: "btn btn-primary",
