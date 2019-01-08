@@ -108,15 +108,8 @@ function WebDir_Main()
     $copy .= ' | <a href="' . WebDir_Path("main", "host") . '" title="管理">后台管理</a>';
     $zbp->template->SetTags('copyright', $copy);
   }
-  $tips = "";
-  if ($zbp->CheckPlugin('SmartQQ2') && SmartQQ2_Static($tips)) {
-    $zbp->template->SetTags('dirs', array());
-    $zbp->template->SetTags('files', array());
-    $zbp->template->SetTags('tips', $tips);
-  } else {
     $zbp->template->SetTags('dirs', $x->out("dir"));
     $zbp->template->SetTags('files', $x->out("file"));
-  }
   $zbp->template->Display("WebDir");
 }
 function WebDir_Path($file, $t = "path")
