@@ -94,7 +94,11 @@ function WebDir_Rewrite($inpurl, $url)
 function WebDir_BuidTemp(&$templates)
 {
   global $zbp;
-  $templates['WebDir'] = file_get_contents(WebDir_Path("html"));
+  $html = WebDir_Path("u-html");
+  if (!is_file($html)) {
+    $html = WebDir_Path("v-html");
+  }
+  $templates['WebDir'] = file_get_contents($html);
 }
 function WebDir_Main()
 {
@@ -108,8 +112,8 @@ function WebDir_Main()
     $copy .= ' | <a href="' . WebDir_Path("main", "host") . '" title="管理">后台管理</a>';
     $zbp->template->SetTags('copyright', $copy);
   }
-    $zbp->template->SetTags('dirs', $x->out("dir"));
-    $zbp->template->SetTags('files', $x->out("file"));
+  $zbp->template->SetTags('dirs', $x->out("dir"));
+  $zbp->template->SetTags('files', $x->out("file"));
   $zbp->template->Display("WebDir");
 }
 function WebDir_Path($file, $t = "path")
@@ -117,13 +121,19 @@ function WebDir_Path($file, $t = "path")
   global $zbp;
   $result = $zbp->$t . "zb_users/plugin/WebDir/";
   switch ($file) {
-    case "base":
+    case "usr":
       return $result . "usr/";
+      break;
+    case "base":
+      return $result . "upload/";
       break;
     case "baseV":
       return str_replace(trim($zbp->path, "/"), "", WebDir_Path("base"));
       break;
-    case "html":
+    case "u-html":
+      return $result . "usr/WebDir.html";
+      break;
+    case "v-html":
       return $result . "var/WebDir.html";
       break;
     case "main":
@@ -137,9 +147,13 @@ function InstallPlugin_WebDir()
 {
   global $zbp;
   $zbp->BuildTemplate();
-  $dir = WebDir_Path("base");
-  if (!is_dir($dir)) {
-    @mkdir($dir);
+  $upload = WebDir_Path("base");
+  $usr = WebDir_Path("usr");
+  if (is_dir($usr) && !is_dir($upload)) {
+    rename($usr, $upload);
+  }
+  if (!is_dir($upload)) {
+    @mkdir($upload);
   }
 }
 function UninstallPlugin_WebDir()
