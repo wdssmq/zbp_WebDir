@@ -48,6 +48,7 @@ class WebDir
       rsort($this->file);
       rsort($this->dirdir);
     } else {
+      InstallPlugin_WebDir();
       echo "error";
     }
   }

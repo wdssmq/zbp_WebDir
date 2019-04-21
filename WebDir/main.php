@@ -13,7 +13,11 @@ if (!$zbp->CheckPlugin('WebDir')) {
 }
 InstallPlugin_WebDir();
 $blogtitle = '前台附件下载列表';
-$url = $zbp->host . "WebDir/";
+if ($zbp->option['ZC_STATIC_MODE'] == 'ACTIVE'){
+  $url = $zbp->host . "?WebDir";
+} else {
+  $url = $zbp->host . "WebDir/";
+}
 require $blogpath . 'zb_system/admin/admin_header.php';
 require $blogpath . 'zb_system/admin/admin_top.php';
 ?>

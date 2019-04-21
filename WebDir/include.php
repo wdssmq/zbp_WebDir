@@ -83,9 +83,10 @@ function WebDir_Rewrite($inpurl, $url)
 {
   global $zbp;
     // $url = trim(urldecode($url), '/');
+  $q = GetVars("WebDir","GET");
   $r = UrlRule::OutputUrlRegEx("{%host%}WebDir/", 'article');
   $m = array();
-  if (preg_match($r, $url, $m) == 1) {
+  if (preg_match($r, $url, $m) == 1 || $q !== null) {
     WebDir_Main();
     $GLOBALS['hooks']['Filter_Plugin_ViewAuto_Begin']['WebDir_Rewrite'] = PLUGIN_EXITSIGNAL_RETURN;
     return null;
