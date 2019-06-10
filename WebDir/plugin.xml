@@ -2,7 +2,7 @@
 <plugin version="php">
 <id>WebDir</id>
 <name>前台附件下载列表</name>
-<url>https://app.zblogcn.com/?auth=6401c4a7-89cd-48f9-a68b-d6464d8c3bc8</url>
+<url>//jq.qq.com/?_wv=1027&amp;k=555hND5</url>
 <note>前台显示文件列表并提供下载</note>
 <description>置百丈玄冰而崩裂，掷须臾池水而漂摇。</description>
 <path>main.php</path>
@@ -18,7 +18,7 @@
   <email></email>
   <url></url>
 </source>
-<adapted>151935</adapted>
+<adapted>151626</adapted>
 <version>1.0</version>
 <pubdate>2018-10-21</pubdate>
 <modified>2019-04-21</modified>
