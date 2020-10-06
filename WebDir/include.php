@@ -28,7 +28,7 @@ function WebDir_CheckExtName($name)
   global $zbp;
   $e = GetFileExt($name);
   $extList = $zbp->option['ZC_UPLOAD_FILETYPE'];
-    // 无论如何，禁止.php、.php5之类的文件的上传
+  // 无论如何，禁止.php、.php5之类的文件的上传
   if (preg_match('/php/i', $e)) {
     return false;
   }
@@ -49,6 +49,7 @@ function WebDir_Upload()
   if ($action === "WebDirPst") {
     CheckIsRefererValid();
     $rlt = array();
+    $err = 0;
     foreach ($_FILES as $key => $value) {
       if ($_FILES[$key]['error'] == 0) {
         if (is_uploaded_file($_FILES[$key]['tmp_name'])) {
@@ -64,10 +65,16 @@ function WebDir_Upload()
           $rlt['name'] = $_FILES[$key]['name'];
           move_uploaded_file($_FILES[$key]['tmp_name'], WebDir_Path("base") . $file);
         }
+      } else {
+        $err = 1;
       }
     }
     if ($type !== "ajax") {
-      $zbp->SetHint('good');
+      if ($err) {
+        $zbp->SetHint('tips', "上传失败请检查空间环境或文件名");
+      } else {
+        $zbp->SetHint('good');
+      }
       Redirect(WebDir_Path('main.php', 'host'));
     } else {
       JsonReturn((object)$rlt);
@@ -82,8 +89,7 @@ function WebDir_Upload()
 function WebDir_Rewrite($inpurl, $url)
 {
   global $zbp;
-    // $url = trim(urldecode($url), '/');
-  $q = GetVars("WebDir","GET");
+  $q = GetVars("WebDir", "GET");
   $r = UrlRule::OutputUrlRegEx("{%host%}WebDir/", 'article');
   $m = array();
   if (preg_match($r, $url, $m) == 1 || $q !== null) {
@@ -150,8 +156,8 @@ function InstallPlugin_WebDir()
   $zbp->BuildTemplate();
   $upload = WebDir_Path("base");
   $usr = WebDir_Path("usr");
-  if (is_dir($usr) && !is_dir($upload)) {
-    rename($usr, $upload);
+  if (!is_dir($usr)) {
+    @mkdir($usr);
   }
   if (!is_dir($upload)) {
     @mkdir($upload);
