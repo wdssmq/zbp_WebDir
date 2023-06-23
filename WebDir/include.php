@@ -102,6 +102,8 @@ function WebDir_Upload2R2($name, $file)
   $bucket_name = $zbp->Config('WebDir')->bucket_name;
   // 过滤掉 $name 中的 # 字符
   $name = str_replace("#", "", $name);
+  // 拼接到 WebDir 目录下
+  $name = "WebDir/" . $name;
   $r2 = mz_CloudflareBase_R2($bucket_name);
   $r2->uploadFile($name, $file);
 }
