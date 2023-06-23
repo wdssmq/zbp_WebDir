@@ -23,8 +23,8 @@ class WebDir
     $this->baseDir = $baseDir;
     $this->baseUrl = $baseUrl;
     $this->fileType = $fileType;
-    $this->notex = array("php", "js", "tgz", "dat");//不允许显示的后缀名文件
-    $this->notdir = array(".git", "a", "phpmyadmin");//不允许显示的文件夹
+    $this->notex = array("php", "js", "tgz", "dat");// 不允许显示的后缀名文件
+    $this->notdir = array(".git", "a", "phpmyadmin");// 不允许显示的文件夹
     $path = GetVars("dir", "GET");
     if (!empty($path)) {
       foreach ($this->notdir as $key => $value) {
