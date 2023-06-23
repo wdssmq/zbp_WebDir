@@ -1,5 +1,5 @@
 <?php
-#注册插件
+
 require_once __DIR__ . "/function.php";
 RegisterPlugin("WebDir", "ActivePlugin_WebDir");
 
@@ -10,6 +10,7 @@ function ActivePlugin_WebDir()
   Add_Filter_Plugin('Filter_Plugin_Cmd_Begin', 'WebDir_Upload');
   Add_Filter_Plugin('Filter_Plugin_Zbp_CheckRights', 'WebDir_CheckRights');
 }
+
 function WebDir_CheckRights($action, $level)
 {
   global $zbp;
@@ -23,24 +24,27 @@ function WebDir_CheckRights($action, $level)
     }
   }
 }
+
 function WebDir_CheckExtName($name)
 {
   global $zbp;
   $e = GetFileExt($name);
   $extList = $zbp->option['ZC_UPLOAD_FILETYPE'];
-  // 无论如何，禁止.php、.php5之类的文件的上传
+  // 无论如何，禁止.php、.php5 之类的文件的上传
   if (preg_match('/php/i', $e)) {
     return false;
   }
 
   return HasNameInString($extList, $e);
 }
+
 function WebDir_Trim($value)
 {
   $value = trim($value);
   $value = trim($value, "_#");
   return $value;
-};
+}
+
 function WebDir_Upload()
 {
   global $zbp;
@@ -50,6 +54,7 @@ function WebDir_Upload()
     CheckIsRefererValid();
     $rlt = array();
     $err = 0;
+    $use_r2 = $zbp->Config('WebDir')->use_r2 && $zbp->CheckPlugin('mz_CloudflareBase');
     foreach ($_FILES as $key => $value) {
       if ($_FILES[$key]['error'] == 0) {
         if (is_uploaded_file($_FILES[$key]['tmp_name'])) {
@@ -61,9 +66,13 @@ function WebDir_Upload()
           $temp_arr = explode(".", $file);
           $temp_arr = array_map("WebDir_Trim", $temp_arr);
           $file_ext = strtolower(array_pop($temp_arr));
-          $file = join(".", $temp_arr) . "#-#" . date("YmdHi") . '.' . $file_ext;
+          $file = join(".", $temp_arr) . "#-#" . date("Y-m-d-H") . '.' . $file_ext;
           $rlt['name'] = $_FILES[$key]['name'];
-          move_uploaded_file($_FILES[$key]['tmp_name'], WebDir_Path("base") . $file);
+          if ($use_r2) {
+            WebDir_Upload2R2($file, $_FILES[$key]['tmp_name']);
+          } else {
+            move_uploaded_file($_FILES[$key]['tmp_name'], WebDir_Path("base") . $file);
+          }
         }
       } else {
         $err = 1;
@@ -86,6 +95,17 @@ function WebDir_Upload()
     Redirect($zbp->host . "WebDir/");
   }
 }
+
+function WebDir_Upload2R2($name, $file)
+{
+  global $zbp;
+  $bucket_name = $zbp->Config('WebDir')->bucket_name;
+  // 过滤掉 $name 中的 # 字符
+  $name = str_replace("#", "", $name);
+  $r2 = mz_CloudflareBase_R2($bucket_name);
+  $r2->uploadFile($name, $file);
+}
+
 function WebDir_Rewrite($inpurl, $url)
 {
   global $zbp;
@@ -98,6 +118,7 @@ function WebDir_Rewrite($inpurl, $url)
     return null;
   }
 }
+
 function WebDir_BuidTemp(&$templates)
 {
   global $zbp;
@@ -107,6 +128,7 @@ function WebDir_BuidTemp(&$templates)
   }
   $templates['WebDir'] = file_get_contents($html);
 }
+
 function WebDir_Main()
 {
   global $zbp;
@@ -123,6 +145,7 @@ function WebDir_Main()
   $zbp->template->SetTags('files', $x->out("file"));
   $zbp->template->Display("WebDir");
 }
+
 function WebDir_Path($file, $t = "path")
 {
   global $zbp;
@@ -150,6 +173,7 @@ function WebDir_Path($file, $t = "path")
       return $result . $file;
   }
 }
+
 function InstallPlugin_WebDir()
 {
   global $zbp;
@@ -163,6 +187,7 @@ function InstallPlugin_WebDir()
     @mkdir($upload);
   }
 }
+
 function UninstallPlugin_WebDir()
 {
   global $zbp;
