@@ -43,7 +43,10 @@ require $blogpath . 'zb_system/admin/admin_top.php';
 ?>
 <div id="divMain">
   <div class="divHeader"><?php echo $blogtitle; ?></div>
-  <div class="SubMenu"></div>
+  <div class="SubMenu">
+    <a href="main.php" title="首页"><span class="m-left m-now">首页</span></a>
+    <?php require "about.php"; ?>
+  </div>
   <div id="divMain2">
     <!-- ----------------- -->
     <form class="search" name="upload" id="upload" method="post" enctype="multipart/form-data" action="<?php echo BuildSafeCmdURL('act=WebDirPst'); ?>">
@@ -63,9 +66,6 @@ require $blogpath . 'zb_system/admin/admin_top.php';
     <!-- ----------------- -->
     --------
     <h3><a href="<?php echo $zbp->host ?>zb_users/plugin/AppCentre/main.php?id=1859#tab-comment" title="反馈" target="_blank">反馈建议</a>&nbsp;&nbsp;<a href="https://github.com/maysrp/webdir" title="maysrp-webdir" target="_blank">方案及重要代码来源</a></h3>
-    <div class="xnxf">
-      <h5>－－－－下边是推广链接－－－－</h5>
-    </div>
   </div>
 </div>
 
