@@ -25,17 +25,29 @@ function WebDir_CheckRights($action, $level)
   }
 }
 
-function WebDir_CheckExtName($name)
+
+function WebDir_CheckExtOrSize($name, $size)
 {
   global $zbp;
+  $rlt = array(
+    "ext" => false,
+    "size" => false
+  );
   $e = GetFileExt($name);
   $extList = $zbp->option['ZC_UPLOAD_FILETYPE'];
   // 无论如何，禁止.php、.php5 之类的文件的上传
   if (preg_match('/php/i', $e)) {
-    return false;
+    return $rlt;
+  }
+  if (HasNameInString($extList, $e)) {
+    $rlt["ext"] = true;
+  }
+  $maxSize = (1024 * 1024 * (int) $zbp->option['ZC_UPLOAD_FILESIZE']);
+  if ($size <= $maxSize) {
+    $rlt["size"] = true;
   }
 
-  return HasNameInString($extList, $e);
+  return $rlt;
 }
 
 function WebDir_Trim($value)
@@ -50,43 +62,56 @@ function WebDir_Upload()
   global $zbp;
   $action = GetVars('act', 'GET');
   $type = GetVars('type', 'GET');
+  $errMap = array(
+    "0" => "操作成功",
+    "1" => "不支持的文件类型",
+    "2" => "文件大小超出限制",
+    "3" => "其他错误",
+  );
+  $errCode = 0;
+  $rlt = array();
+
   if ($action === "WebDirPst") {
     CheckIsRefererValid();
     $rlt = array();
-    $err = 0;
     $use_r2 = $zbp->Config('WebDir')->use_r2 && $zbp->CheckPlugin('mz_CloudflareBase');
     foreach ($_FILES as $key => $value) {
       if ($_FILES[$key]['error'] == 0) {
         if (is_uploaded_file($_FILES[$key]['tmp_name'])) {
-          if (!WebDir_CheckExtName($_FILES[$key]['name'])) {
-            $zbp->ShowError(26, __FILE__, __LINE__);
-            return false;
+          // 获取文件大小
+          $rlt["size"] = $_FILES[$key]['size'];
+          // 获取文件名
+          $rlt["name"] = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? iconv("UTF-8", "GBK", $_FILES[$key]['name']) : $_FILES[$key]['name'];
+          // 检查文件名和文件大小
+          $check = WebDir_CheckExtOrSize($rlt["name"], $rlt["size"]);
+          if (!$check["ext"] || !$check["size"]) {
+            $errCode = $check["ext"] ? 2 : 1;
+            break;
           }
-          $file = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? iconv("UTF-8", "GBK", $_FILES[$key]['name']) : $_FILES[$key]['name'];
-          $temp_arr = explode(".", $file);
+          // 实际用于保存的文件名
+          $temp_arr = explode(".", $rlt["name"]);
           $temp_arr = array_map("WebDir_Trim", $temp_arr);
           $file_ext = strtolower(array_pop($temp_arr));
-          $file = join(".", $temp_arr) . "#-#" . date("Y-m-d-H") . '.' . $file_ext;
-          $rlt['name'] = $_FILES[$key]['name'];
+          $file_name = join(".", $temp_arr) . "#-#" . date("Y-m-d-H") . '.' . $file_ext;
           if ($use_r2) {
-            WebDir_Upload2R2($file, $_FILES[$key]['tmp_name']);
+            WebDir_Upload2R2($file_name, $_FILES[$key]['tmp_name']);
           } else {
-            move_uploaded_file($_FILES[$key]['tmp_name'], WebDir_Path("base") . $file);
+            move_uploaded_file($_FILES[$key]['tmp_name'], WebDir_Path("base") . $file_name);
           }
         }
       } else {
-        $err = 1;
+        $errCode = 3;
       }
     }
     if ($type !== "ajax") {
-      if ($err) {
-        $zbp->SetHint('tips', "上传失败请检查空间环境或文件名");
+      if ($errCode) {
+        $zbp->SetHint('tips', $errMap[$errCode]);
       } else {
         $zbp->SetHint('good');
       }
       Redirect(WebDir_Path('main.php', 'host'));
     } else {
-      JsonReturn((object)$rlt);
+      JsonError($errCode, $errMap[$errCode], $rlt);
     }
   } else if ($action === "WebDirDel") {
     CheckIsRefererValid();

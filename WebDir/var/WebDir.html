@@ -1,69 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>WebDir - {$name}</title>
-    <link
-      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.0/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.bootcdn.net/ajax/libs/bootstrap-fileinput/4.3.8/css/fileinput.min.css"
-      rel="stylesheet"
-    />
-    <style type="text/css">
-      body {
-        background-color: #f1f1fa;
-      }
-      .container {
-        margin-top: 37px;
-        margin-bottom: 37px;
-        border-radius: 15px;
-        background-color: #ffffff;
-        padding-bottom: 13px;
-      }
-      .row.nav {
-        padding: 20px 0 13px;
-      }
-      .table {
-        table-layout: fixed;
-      }
-      .paddingless {
-        padding: 0;
-      }
-      th:first-child,
-      td:first-child {
-        width: 41%;
-      }
-      td:first-child > * {
-        display: inline-block;
-        width: 102%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .td10 {
-        width: 10%;
-      }
-      .tips,
-      .tips * {
-        text-align: center;
-        margin: 0;
-        padding: 0;
-      }
-      .act-del,
-      .act-del * {
-        text-decoration: line-through;
-      }
-      .file-drop-zone.clickable:hover {
-        border: 1px dashed #999;
-      }
-    </style>
-    {$header}
-  </head>
-  <!--
+
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <meta
+    http-equiv="X-UA-Compatible"
+    content="ie=edge"
+  />
+  <title>WebDir - {$name}</title>
+  <link
+    href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.0/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://cdn.bootcdn.net/ajax/libs/bootstrap-fileinput/4.3.8/css/fileinput.min.css"
+    rel="stylesheet"
+  />
+  <style type="text/css">
+    body {
+      background-color: #f1f1fa;
+    }
+
+    .container {
+      margin-top: 37px;
+      margin-bottom: 37px;
+      border-radius: 15px;
+      background-color: #ffffff;
+      padding-bottom: 13px;
+    }
+
+    .row.nav {
+      padding: 20px 0 13px;
+    }
+
+    .table {
+      table-layout: fixed;
+    }
+
+    .paddingless {
+      padding: 0;
+    }
+
+    th:first-child,
+    td:first-child {
+      width: 41%;
+    }
+
+    td:first-child>* {
+      display: inline-block;
+      width: 102%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .td10 {
+      width: 10%;
+    }
+
+    .tips,
+    .tips * {
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .act-del,
+    .act-del * {
+      text-decoration: line-through;
+    }
+
+    .file-drop-zone.clickable:hover {
+      border: 1px dashed #999;
+    }
+  </style>
+  {$header}
+</head>
+<!--
     /**
      *
      * 主体代码修改自：maysrp/webdir: 网站目录
@@ -73,201 +90,241 @@
      *
      **/
   -->
-  <body>
-    <div class="container">
-      <div class="row nav">
-        <div class="col-xs-1 paddingless text-center">
-          <a
-            class="btn btn-primary"
-            href="{if isset($_SERVER['HTTP_REFERER'])}{$_SERVER['HTTP_REFERER']}{/if}"
-            title="返回"
-          >
-            <span class="glyphicon glyphicon-chevron-left"></span>
-          </a>
-        </div>
-        <div class="col-xs-10 paddingless">
-          {if $user.Level < 4}
-          <form
-            class="js-form hidden"
-            action="{BuildSafeCmdURL('act=WebDirPst&type=ajax')}"
-            method="post"
-            target="_blank"
-            enctype="multipart/form-data"
-          >
-            <input type="file" name="file" id="file" multiple />
-          </form>
-          {/if}
-        </div>
-        <div class="col-xs-1 paddingless text-center">
-          <a class="btn btn-primary" href="{$host}" title="主页">
-            <span class="glyphicon glyphicon-home"></span>
-          </a>
-        </div>
-      </div>
-      <table class="table table-striped table-bordered table-hover">
-        <tr>
-          <th>文件名</th>
-          <th class="text-center">时间</th>
-          <th class="text-center">大小</th>
-          <th class="text-center td10">下载</th>
-        </tr>
-        {foreach $dirs as $dir}
-        <tr>
-          <td>
-            <a href="?dir={$dir.url}"
-              ><span class="{$dir.icon}"></span
-              ><span class="js-length">{$dir.name}</span></a
-            >
-          </td>
-          <td class="text-center">{$dir.mtime}</td>
-          <td class="text-center">{$dir.size}</td>
-          <td></td>
-        </tr>
-        {/foreach} {foreach $files as $file}
-        <tr class="act-{$file.act}">
-          <td>
-            <a
-              href="?file={$file.url}"
-              title="{$file.name}"
-              onclick="return false;"
-              ><span class="{$file.icon}"></span
-              ><span class="js-length">{$file.name}</span></a
-            >
-          </td>
-          <td class="text-center">{$file.mtime}</td>
-          <td class="text-center">{$file.size}</td>
-          <td class="text-center td10">
-            <a
-              class="js-download"
-              href="{$file.download}"
-              download="{$file.name}"
-              ><span class="glyphicon glyphicon-download-alt"></span
-            ></a>
-            {if $user.Level < 4}&nbsp;
-            <a
-              class="js-del"
-              data-href="{$file.url}"
-              onclick="return window.confirm('单击“确定”继续。单击“取消”停止。');"
-              href="{BuildSafeCmdURL('act=WebDirDel&file=-file-')}"
-              title="删除"
-              ><span class="glyphicon glyphicon-trash"></span
-            ></a>
-            {/if}
-          </td>
-        </tr>
-        {/foreach} {if isset($tips)}
-        <tr class="tips">
-          <td colspan="4">{$tips}</td>
-        </tr>
-        {/if}
-      </table>
 
-      <p class="text-center">{$copyright}</p>
-      <p class="text-center">
-        Powered By
+<body>
+  <div class="container">
+    <div class="row nav">
+      <div class="col-xs-1 paddingless text-center">
         <a
-          href="//www.zblogcn.com/"
-          rel="nofollow"
-          title="Z-BlogPHP"
-          target="_blank"
-          >Z-BlogPHP</a
+          class="btn btn-primary"
+          href="{if isset($_SERVER['HTTP_REFERER'])}{$_SERVER['HTTP_REFERER']}{/if}"
+          title="返回"
         >
-        &
+          <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+      </div>
+      <div class="col-xs-10 paddingless">
+        {if $user.Level <
+          4}
+          <form
+          class="js-form hidden"
+          action="{BuildSafeCmdURL('act=WebDirPst&type=ajax')}"
+          method="post"
+          target="_blank"
+          enctype="multipart/form-data"
+        >
+          <input
+            type="file"
+            name="file"
+            id="file"
+            multiple
+          />
+          </form>
+          <p class="js-tips alert hidden"></p>
+          {/if}
+      </div>
+      <div class="col-xs-1 paddingless text-center">
         <a
-          href="https://app.zblogcn.com/?id=1859"
-          target="_blank"
-          title="WebDir For ZBP"
-          rel="nofollow"
-          >WebDir For ZBP</a
+          class="btn btn-primary"
+          href="{$host}"
+          title="主页"
         >
-      </p>
+          <span class="glyphicon glyphicon-home"></span>
+        </a>
+      </div>
     </div>
-    <script
-      src="{$host}zb_system/script/jquery-2.2.4.min.js"
-      type="text/javascript"
-    ></script>
-    <script
-      src="{$host}zb_system/script/zblogphp.js"
-      type="text/javascript"
-    ></script>
-    <script
-      src="{$host}zb_system/script/c_html_js_add.php"
-      type="text/javascript"
-    ></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-fileinput/4.3.8/js/fileinput.min.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-fileinput/4.3.8/js/locales/zh.min.js"></script>
-    <script type="text/javascript">
-      $(function () {
-        $("body > .container")
-          .on("dragenter", function (ev) {
-            $(".file-preview").removeClass("hidden");
-          })
-          .on("click", ".close.fileinput-remove", function () {
+    <table class="table table-striped table-bordered table-hover">
+      <tr>
+        <th>文件名</th>
+        <th class="text-center">时间</th>
+        <th class="text-center">大小</th>
+        <th class="text-center td10">下载</th>
+      </tr>
+      {foreach $dirs as $dir}
+      <tr>
+        <td>
+          <a href="?dir={$dir.url}"><span class="{$dir.icon}"></span><span class="js-length">{$dir.name}</span></a>
+        </td>
+        <td class="text-center">{$dir.mtime}</td>
+        <td class="text-center">{$dir.size}</td>
+        <td></td>
+      </tr>
+      {/foreach} {foreach $files as $file}
+      <tr class="act-{$file.act}">
+        <td>
+          <a
+            href="?file={$file.url}"
+            title="{$file.name}"
+            onclick="return false;"
+          ><span class="{$file.icon}"></span><span class="js-length">{$file.name}</span></a>
+        </td>
+        <td class="text-center">{$file.mtime}</td>
+        <td class="text-center">{$file.size}</td>
+        <td class="text-center td10">
+          <a
+            class="js-download"
+            href="{$file.download}"
+            download="{$file.name}"
+          ><span class="glyphicon glyphicon-download-alt"></span></a>
+          {if $user.Level <
+            4}&nbsp;
+            <a
+            class="js-del"
+            data-href="{$file.url}"
+            onclick="return window.confirm('单击“确定”继续。单击“取消”停止。');"
+            href="{BuildSafeCmdURL('act=WebDirDel&file=-file-')}"
+            title="删除"
+          ><span class="glyphicon glyphicon-trash"></span></a>
+            {/if}
+        </td>
+      </tr>
+      {/foreach} {if isset($tips)}
+      <tr class="tips">
+        <td colspan="4">{$tips}</td>
+      </tr>
+      {/if}
+    </table>
+
+    <p class="text-center">{$copyright}</p>
+    <p class="text-center">
+      Powered By
+      <a
+        href="//www.zblogcn.com/"
+        rel="nofollow"
+        title="Z-BlogPHP"
+        target="_blank"
+      >Z-BlogPHP</a>
+      &
+      <a
+        href="https://app.zblogcn.com/?id=1859"
+        target="_blank"
+        title="WebDir For ZBP"
+        rel="nofollow"
+      >WebDir For
+        ZBP</a>
+    </p>
+  </div>
+  <script
+    src="{$host}zb_system/script/jquery-2.2.4.min.js"
+    type="text/javascript"
+  ></script>
+  <script
+    src="{$host}zb_system/script/zblogphp.js"
+    type="text/javascript"
+  ></script>
+  <script
+    src="{$host}zb_system/script/c_html_js_add.php"
+    type="text/javascript"
+  ></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-fileinput/4.3.8/js/fileinput.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-fileinput/4.3.8/js/locales/zh.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("body > .container")
+        .on("dragenter", function (ev) {
+          $(".file-preview").removeClass("hidden");
+        })
+        .on("click", ".close.fileinput-remove", function () {
+          $(".file-preview").addClass("hidden");
+        })
+        .on("drop", function (ev) {
+          console.log($(ev.target));
+          if (
+            $(ev.target).hasClass("file-drop-zone-title") ||
+            $(".file-drop-zone").find(ev.target).length > 0
+          ) {
+            setTimeout(() => {
+              // 自动滚动到提示
+              $("html,body").animate(
+                {
+                  scrollTop: $(".file-caption-main").offset().top - 20,
+                },
+                100
+              );
+              // 自动点击上传按钮
+              $(".js-upload-btn").trigger("click");
+            }, 1000);
+          } else {
             $(".file-preview").addClass("hidden");
+          }
+        });
+      // 提示输出
+      function tips(str, type) {
+        $(".js-tips")
+          .removeClass("hidden")
+          .addClass("alert-" + type)
+          .css({
+            "padding-top": "10px",
+            "padding-bottom": "10px",
           })
-          .on("drop", function (ev) {
-            console.log($(ev.target));
-            if (
-              $(ev.target).hasClass("file-drop-zone-title") ||
-              $(".file-drop-zone").find(ev.target).length > 0
-            ) {
-              $("#file").fileinput("upload");
-            } else {
-              $(".file-preview").addClass("hidden");
-            }
+          .html(str)
+          .slideDown(1500)
+          .delay(7000)
+          .slideUp(4000, function () {
+            $(this).removeClass("alert-" + type).addClass("hidden");
           });
-        $("#file")
-          .fileinput({
-            language: "zh", //设置语言
-            uploadUrl: $(".js-form").attr("action"), //上传的地址
-            // allowedFileExtensions: ['jpg', 'png', 'torrent'],//接收的文件后缀
-            allowedPreviewTypes: ["image", "html", "text"],
-            browseOnZoneClick: true,
-            browseClass: "btn btn-primary",
-            browseLabel: "选择文件",
-            browseIcon: '<i class="glyphicon glyphicon-plus"></i>',
-            removeClass: "btn btn-danger",
-            removeIcon: '<i class="glyphicon glyphicon-trash"></i>',
-            uploadClass: "btn btn-info",
-            uploadLabel: "上传",
-            uploadIcon: '<i class="glyphicon glyphicon-refresh"></i>',
-            initialCaption: "选择文件或拖拽文件到本页",
-          })
-          .on("fileuploaded", function (event, data, previewId, index) {
-            console.log(JSON.stringify(data.response));
-            console.log(data.response);
-            $(".kv-upload-progress").slideUp(1500);
-            if (data.response.err.code === 0) {
-              location.reload();
-            }
-          });
-        $(".file-caption").click(function () {
-          $("#file").trigger("click");
+      }
+      $("#file")
+        .fileinput({
+          language: "zh", // 设置语言
+          uploadUrl: $(".js-form").attr("action"), // 上传的地址
+          // allowedFileExtensions: ['jpg', 'png', 'torrent'],// 接收的文件后缀
+          allowedPreviewTypes: ["image", "html", "text"],
+          browseOnZoneClick: true,
+          browseClass: "btn btn-primary",
+          browseLabel: "选择文件",
+          browseIcon: '<i class="glyphicon glyphicon-plus"></i>',
+          removeClass: "btn btn-danger",
+          removeIcon: '<i class="glyphicon glyphicon-trash"></i>',
+          uploadClass: "btn btn-info js-upload-btn",
+          uploadLabel: "上传",
+          uploadIcon: '<i class="glyphicon glyphicon-refresh"></i>',
+          initialCaption: "选择文件或拖拽文件到本页",
+          // enctype: 'multipart/form-data',
+          // uploadAsync: false,
+        })
+        .on("fileuploaded", function (event, data, previewId, index) {
+          // console.log(JSON.stringify(data.response));
+          console.log(data.response);
+          const { err, data: res } = data.response;
+          $(".kv-upload-progress").slideUp(1500);
+          if (err.code === 0) {
+            tips("上传成功，3 秒后自动刷新页面；", "success");
+            setTimeout(function () {
+              window.location.reload();
+            }, 3000);
+          } else {
+            tips(`${err.msg} | ${res.name}`, "danger");
+          }
         });
-        $(".file-preview").addClass("hidden");
-        $(".js-form").removeClass("hidden");
-        $(".js-download").mouseenter(function () {
-          this.href = this.href.replace(/#/g, "%23");
-          console.log(this.href);
-        });
-        $(".js-del").mouseenter(function () {
-          this.href = this.href.replace(/-file-/g, $(this).data("href"));
-          console.log(this.href);
-        });
-        $(".act-del,.act-del a").each(function () {
-          $(this).addClass("text-warning");
-        });
-        $("td .js-length").each(function () {
-          let str = $(this).html().trim();
-          let m = 31,
-            n = 23;
-          if (str.length <= m + n) return;
-          let strStart = str.substr(0, m);
-          let strEnd = str.substr(str.length - n, n);
-          $(this).html(strStart + "...." + strEnd);
-        });
+      $(".file-caption").click(function () {
+        $("#file").trigger("click");
       });
-    </script>
-    {$footer}
-  </body>
+      $(".file-preview").addClass("hidden");
+      $(".js-form").removeClass("hidden");
+      $(".js-download").mouseenter(function () {
+        this.href = this.href.replace(/#/g, "%23");
+        console.log(this.href);
+      });
+      $(".js-del").mouseenter(function () {
+        this.href = this.href.replace(/-file-/g, $(this).data("href"));
+        console.log(this.href);
+      });
+      $(".act-del,.act-del a").each(function () {
+        $(this).addClass("text-warning");
+      });
+      $("td .js-length").each(function () {
+        let str = $(this).html().trim();
+        let m = 31,
+          n = 23;
+        if (str.length <= m + n) return;
+        let strStart = str.substr(0, m);
+        let strEnd = str.substr(str.length - n, n);
+        $(this).html(strStart + "...." + strEnd);
+      });
+    });
+  </script>
+  {$footer}
+</body>
+
 </html>
